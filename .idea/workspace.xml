@@ -2,8 +2,9 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="Project" targetName="Production" />
-      <config projectName="Project" targetName="Debug" />
+      <config projectName="robomatch" targetName="Z_DUMMY_TARGET" />
+      <config projectName="robomatch" targetName="Debug" />
+      <config projectName="robomatch" targetName="Production" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -12,34 +13,28 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58241272-e985-42ef-857f-f6633baab70c" name="Changes" comment="Add game framework">
-      <change afterPath="$PROJECT_DIR$/robomatch/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/robomatch/.vscode/extensions.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/robomatch/include/README" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/robomatch/lib/README" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/robomatch/platformio.ini" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/robomatch/src/main.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/robomatch/test/README" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/memorygame.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/c_cpp_properties.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/extensions.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/launch.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeListsPrivate.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/memorygame.cbp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-uno/memorygame.cbp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/README" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/README" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/platformio.ini" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/README" beforeDir="false" />
+    <list default="true" id="7367ebde-b4b2-42cf-81cb-76ed16404984" name="Changes" comment="Removed/disabled debugging code">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/.idea/deployment.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/.idea/discord.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/.idea/robomatch.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/.vscode/extensions.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/CMakeLists.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/CMakeListsPrivate.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/cmake-build-debug/robomatch.cbp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/cmake-build-uno/robomatch.cbp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/include/README" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/lib/README" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/platformio.ini" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/src/main.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robomatch/test/README" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,19 +44,12 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:uno" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitSEFilterConfiguration">
-    <file-type-list>
-      <filtered-out-file-type name="LOCAL_BRANCH" />
-      <filtered-out-file-type name="REMOTE_BRANCH" />
-      <filtered-out-file-type name="TAG" />
-      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
-    </file-type-list>
-  </component>
-  <component name="ProjectId" id="21e47KPpujryGRs5G7gjZGNx794" />
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectId" id="21jUgTqfhmv7NvRZSM6ql6k9vCu" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
@@ -70,6 +58,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="ASKED_MARK_IGNORED_FILES_AS_EXCLUDED" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
@@ -77,42 +66,76 @@
     <property name="cf.first.check.clang-format" value="false" />
     <property name="cidr.known.project.marker" value="true" />
     <property name="cmake.loaded.for.project" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/robomatch" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
-  <component name="RunManager">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+  <component name="RunManager" selected="PlatformIO.PlatformIO Upload">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Z_DUMMY_TARGET" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="robomatch" TARGET_NAME="Z_DUMMY_TARGET" CONFIG_NAME="uno" RUN_TARGET_PROJECT_NAME="robomatch" RUN_TARGET_NAME="Z_DUMMY_TARGET">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+    <configuration name="PlatformIO Debug" type="platformio" factoryName="PlatformIO Debug" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="robomatch" TARGET_NAME="Debug" CONFIG_NAME="uno" RUN_TARGET_PROJECT_NAME="robomatch" RUN_TARGET_NAME="Debug">
       <method v="2">
-        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="PlatformIO Upload" type="platformio" factoryName="PlatformIO Upload" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="robomatch" TARGET_NAME="Production" CONFIG_NAME="uno" RUN_TARGET_PROJECT_NAME="robomatch" RUN_TARGET_NAME="Production">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.Z_DUMMY_TARGET" />
+      <item itemvalue="PlatformIO.PlatformIO Debug" />
+      <item itemvalue="PlatformIO.PlatformIO Upload" />
+    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="58241272-e985-42ef-857f-f6633baab70c" name="Changes" comment="" />
-      <created>1638288051620</created>
+      <changelist id="7367ebde-b4b2-42cf-81cb-76ed16404984" name="Changes" comment="" />
+      <created>1638454101370</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1638288051620</updated>
-      <workItem from="1638288053421" duration="850000" />
-      <workItem from="1638288933461" duration="950000" />
-      <workItem from="1638314476035" duration="116000" />
-      <workItem from="1638314616016" duration="21473000" />
+      <updated>1638454101370</updated>
+      <workItem from="1638454102679" duration="152000" />
+      <workItem from="1638454297165" duration="85000" />
+      <workItem from="1638454431815" duration="2000" />
+      <workItem from="1638454620451" duration="73000" />
+      <workItem from="1638454733217" duration="6588000" />
+      <workItem from="1638467759126" duration="2635000" />
+      <workItem from="1638491243887" duration="9850000" />
+      <workItem from="1638505410104" duration="104000" />
     </task>
-    <task id="LOCAL-00001" summary="Add game framework">
-      <created>1638418448897</created>
+    <task id="LOCAL-00001" summary="Remove ArduinoSTL">
+      <created>1638492072800</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1638418448897</updated>
+      <updated>1638492072800</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Robo Match v1.6 - Working Version">
+      <created>1638502278981</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1638502278981</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Removed/disabled debugging code">
+      <created>1638503690822</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1638503690822</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -132,7 +155,12 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Add game framework" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add game framework" />
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/.." />
+    </ignored-roots>
+    <MESSAGE value="Remove ArduinoSTL" />
+    <MESSAGE value="Robo Match v1.6 - Working Version" />
+    <MESSAGE value="Removed/disabled debugging code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed/disabled debugging code" />
   </component>
 </project>
