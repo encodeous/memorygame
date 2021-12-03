@@ -41,7 +41,14 @@ LiquidCrystal_I2C lcd(0x3F, 16, 2);
 #define li long int
 #pragma endregion
 #pragma region CUSTOM CHARS
-byte CHECK_MARK[] = {
+enum C_CHAR{
+    CHECK,
+    HRT,
+    ARROW_RIGHT,
+    SELECTION_BOX,
+    SELECTION_BOX2
+}cc;
+byte __cc01[] = {
         B00000,
         B00001,
         B00011,
@@ -50,7 +57,7 @@ byte CHECK_MARK[] = {
         B01000,
         B00000,
         B00000};
-byte HEART[] = {
+byte __cc02[] = {
         B00000,
         B00000,
         B01010,
@@ -59,7 +66,36 @@ byte HEART[] = {
         B01110,
         B00100,
         B00000};
-
+byte __cc03[] = {
+        B00000,
+        B00100,
+        B00110,
+        B11111,
+        B11111,
+        B00110,
+        B00100,
+        B00000
+};
+byte __cc04[] = {
+        B11011,
+        B10001,
+        B00000,
+        B00000,
+        B00000,
+        B00000,
+        B10001,
+        B11011
+};
+byte __cc05[] = {
+        B11101,
+        B10001,
+        B10000,
+        B10000,
+        B00001,
+        B00001,
+        B10001,
+        B10111
+};
 #pragma endregion
 #pragma region UTILITIES
 template <typename T>
@@ -109,23 +145,26 @@ void fs_scrolling_text(const String &str, int ln, int duration)
     if (str.length() <= 16)
     {
         lcd.setCursor(0, ln);
-        char buf[16];
-        memcpy(buf, EMPTY_LINE, sizeof(buf));
+        char buf[17];
+        buf[16] = '\0';
+        memcpy(buf, EMPTY_LINE, sizeof(EMPTY_LINE));
         memcpy(buf, str.c_str(), str.length() * sizeof(char));
         lcd.printstr(buf);
     }
     else
     {
+        duration -= 100;
         double mspc = duration / (str.length() - 15.0);
         Serial.println(mspc);
         Serial.println(str.c_str());
         lcd.setCursor(0, ln);
         curstr = str;
-        char buf[16];
+        char buf[17];
         for (int i = 0; i < 16; i++)
         {
             buf[i] = curstr[i];
         }
+        buf[16] = '\0';
         lcd.printstr(buf);
         ts_cur = 1;
         ts_ln = ln;
@@ -133,24 +172,32 @@ void fs_scrolling_text(const String &str, int ln, int duration)
         ts_wtsl = mspc;
         Serial.println(ts_wtsl);
         textScroller.setCallback(ts_callback);
-        textScroller.enableDelayed(ts_wtsl * TASK_MILLISECOND);
+        textScroller.enableDelayed(100 + ts_wtsl * TASK_MILLISECOND);
     }
 }
-void endGame();
+void endGame(bool hasWon);
 struct game
 {
-    char grid[26];
+    char grid[27];
     bool picked[26];
+    int clearSelT = 0;
     int cur = 0;
+    int pcsel = -1;
     int csel = -1;
     int time = 0; // this shows how much time is remaining in 500ms units
     int lives = 0;
+    int remChar = 0;
     bool is_active = false;
-    bool odd_timer = false;
     game() {}
     void init(int difficulty)
     {
-        is_active = true;
+        grid[26] = '\0';
+        remChar = 1;
+        //remChar = 13 * 2;
+        pcsel = -1;
+        csel = -1;
+        clearSelT = 0;
+        memset(picked, 0, sizeof(picked));
         char c3[3][13];
         for (int i = 0; i < 13; i++)
         {
@@ -166,59 +213,141 @@ struct game
             grid[c3[1][i]] = c3[0][i];
             grid[c3[2][i]] = c3[0][i];
         }
-        time = 240 * 2;
-        lives = 21 - mapi(difficulty * difficulty / (20 * 20), 1, 20);
+        time = 600 * 2;
+        //lives = 1;
+        lives = 100 - mapi(difficulty * difficulty / (99 * 99), 1, 99);
     }
-    void render_char(char buf[], const char src[]){
-        Serial.print(src);
+    void render_char(char buf[], const char src[], int ln){
         for(int i = 0; i < 13; i++){
-            buf[i + 3] = src[i];
-            buf[i + 19] = src[i + 13];
+            Serial.println(src[i + ln * 13]);
+            buf[i + 3] = src[i + ln * 13];
+        }
+    }
+    long lastMoved = 0;
+    void render_char_mask(char& val, int idx){
+        if(csel == idx || pcsel == idx){
+            if(time % 2 == 0) val = SELECTION_BOX2;
+        }
+        if(cur == idx){
+            if(time % 2 == 0 || millis() - lastMoved <= 500) val = SELECTION_BOX;
+        }
+    }
+    void render_char_masked(char buf[], const char src[], int ln){
+        for(int i = 0; i < 13; i++){
+            if(picked[i + ln * 13]){
+                buf[i + 3] = src[i + ln * 13];
+            }else{
+                buf[i + 3] = 255;
+            }
+            render_char_mask(buf[i+3], ln * 13 + i);
         }
     }
     void render()
     {
-        char buf[32];
-        buf[0] = 0;
-
-        buf[1] = 'A';
-        buf[2] = 'Y';
-
-        buf[16] = 'O';
-        buf[17] = 'U';
-        buf[18] = 'T';
-        render_char(buf, grid);
+        char buf1[17];
+        buf1[16] = '\0';
+        buf1[0] = HRT;
+        buf1[1] = buf1[2] = ' ';
+        String s = String(lives, DEC);
+        memcpy(buf1 + 1, s.c_str(), sizeof(char) * s.length());
+        char buf2[17];
+        buf2[16] = '\0';
+        buf2[0] = buf2[1] = buf2[2] = ' ';
+        String s2 = String(time / 2, DEC);
+        memcpy(buf2, s2.c_str(), sizeof(char) * s2.length());
+        render_char_masked(buf1, grid, 0);
+        render_char_masked(buf2, grid, 1);
         lcd.home();
-        lcd.printstr(buf);
+        lcd.print(buf1);
+        lcd.setCursor(0, 1);
+        lcd.print(buf2);
     }
     void render_pre()
     {
-        char buf[32];
-        buf[0] = 'L';
-        buf[1] = 'A';
-        buf[2] = 'Y';
-        buf[16] = 'O';
-        buf[17] = 'U';
-        buf[18] = 'T';
-        render_char(buf, grid);
+        char buf1[17];
+        buf1[16] = '\0';
+        buf1[0] = buf1[1] = buf1[2] = 2;
+        char buf2[17];
+        buf2[16] = '\0';
+        buf2[0] = buf2[1] = buf2[2] = 2;
+        render_char(buf1, grid, 0);
+        render_char(buf2, grid, 1);
+        lcd.clear();
         lcd.home();
-        lcd.printstr(buf);
+        lcd.print(buf1);
+        Serial.println(buf1);
+        lcd.setCursor(0, 1);
+        lcd.print(buf2);
+        Serial.println(buf2);
     }
     void win()
     {
+        endGame(false);
+        lcd.clear();
+        lcd.home();
+        lcd.printstr("You Won!");
+        fs_scrolling_text("Going to the next level!", 1, 2500);
     }
     void lose(String reason)
     {
+        endGame(false);
+        lcd.clear();
+        lcd.home();
+        lcd.printstr(reason.c_str());
+        fs_scrolling_text("Restarting the level...", 1, 2500);
     }
     void on_click()
     {
+        if(clearSelT != 0) return;
+        if(picked[cur]) return;
+        if(csel != -1){
+            picked[csel] = true;
+            picked[cur] = true;
+            if(grid[csel] != grid[cur]){
+                clearSelT = 6;
+                lives--;
+                pcsel = cur;
+            }else{
+                remChar -= 2;
+                csel = -1;
+                pcsel = -1;
+            }
+        }else{
+            csel = cur;
+            picked[csel] = true;
+        }
+        check_game();
+    }
+    void check_game(){
+        if(lives <= 0){
+            lose("Out of lives!");
+        }
+        if(remChar <= 0){
+            win();
+        }
+    }
+    void tick(){
+        time--;
+        if(clearSelT > 0){
+            clearSelT--;
+            if(clearSelT == 0){
+                picked[csel] = false;
+                picked[pcsel] = false;
+                csel = -1;
+                pcsel = -1;
+            }
+        }
+        if (time <= 0)
+        {
+            lose("Out of time!");
+        }
     }
 };
 game g;
 void inputScan();
 void screenRefresh();
 void beginGame(int delay = 6000);
-Task inputTask(100 * TASK_MILLISECOND, TASK_FOREVER, &inputScan, &sc, true), refreshTask(100 * TASK_MILLISECOND, TASK_FOREVER, &screenRefresh, &sc, true);
+Task inputTask(15 * TASK_MILLISECOND, TASK_FOREVER, &inputScan, &sc, true), refreshTask(15 * TASK_MILLISECOND, TASK_FOREVER, &screenRefresh, &sc, true);
 Task gameTask(1000 * TASK_MILLISECOND, TASK_ONCE, NULL, &sc, false);
 int curDifficulty = 1;
 void endGame(bool hasWon)
@@ -236,7 +365,11 @@ void inputScan()
 {
     if (!g.is_active)
         return;
-    g.cur = mapi(read_pct(), 0, 26 - 1);
+    int a = mapi(read_pct(), 0, 26 - 1);
+    if(g.cur != a){
+        g.cur = a;
+        g.lastMoved = millis();
+    }
     if (millis() - lastInp >= 20)
     {
         // ready for input
@@ -260,16 +393,12 @@ void screenRefresh()
 }
 void timer()
 {
-    g.odd_timer = !g.odd_timer;
-    g.time--;
-    if (g.time <= 0)
-    {
-        g.lose("Out of time!");
-    }
+    g.tick();
 }
 #pragma region GAME LOADING
 void startGame()
 {
+    g.is_active = true;
     lcd.clear();
     gameTask.setIterations(TASK_FOREVER);
     gameTask.setInterval(500 * TASK_MILLISECOND);
@@ -278,6 +407,7 @@ void startGame()
 }
 void prepGame()
 {
+    lcd.clear();
     g.init(curDifficulty);
     g.render_pre();
     gameTask.setCallback(startGame);
@@ -297,21 +427,29 @@ void beginGame(int delay)
     gameTask.enableDelayed(delay);
 }
 #pragma endregion
+//#define DEBUGGING
 void setup() {
     Serial.begin(9600);
     inputTask.enable();
     refreshTask.enable();
     lcd.init();
     lcd.backlight();
-    lcd.createChar(0, HEART);
-    lcd.createChar(1, CHECK_MARK);
+    lcd.createChar(HRT, __cc02);
+    lcd.createChar(CHECK, __cc01);
+    lcd.createChar(ARROW_RIGHT, __cc03);
+    lcd.createChar(SELECTION_BOX, __cc04);
+    lcd.createChar(SELECTION_BOX2, __cc05);
     pinMode(BUZZER, OUTPUT);
     randomSeed(analogRead(A1));
     srand(analogRead(A1));
+#ifdef DEBUGGING
+    prepGame();
+#else
     lcd.home();
-    lcd.printstr("Robo Match v1.1");
-    fs_scrolling_text("Memory Game Developed by Adam Chen - git.io/robomatch", 1, 5000);
+    lcd.printstr("Robo Match v1.6");
+    fs_scrolling_text("Memory Game Developed by Adam Chen - git.io/robomatch", 1, 4000);
     beginGame();
+#endif
 }
 void loop() {
     sc.execute();
