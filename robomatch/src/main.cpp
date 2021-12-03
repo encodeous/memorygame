@@ -122,6 +122,7 @@ double read_pct()
     return analogRead(IPT_POT) / 1023.0;
 }
 #pragma endregion
+int curDifficulty = 1;
 // simple scheduled scrolling text
 int ts_ln = 0, ts_cur = 0, ts_wtsl, ts_cc = 0;
 String curstr;
@@ -172,7 +173,7 @@ void fs_scrolling_text(const String &str, int ln, int duration)
         ts_wtsl = mspc;
         Serial.println(ts_wtsl);
         textScroller.setCallback(ts_callback);
-        textScroller.enableDelayed(100 + ts_wtsl * TASK_MILLISECOND);
+        textScroller.restartDelayed(100 + ts_wtsl * TASK_MILLISECOND);
     }
 }
 void endGame(bool hasWon);
@@ -192,8 +193,8 @@ struct game
     void init(int difficulty)
     {
         grid[26] = '\0';
-        remChar = 1;
-        //remChar = 13 * 2;
+        //remChar = 1;
+        remChar = 13 * 2;
         pcsel = -1;
         csel = -1;
         clearSelT = 0;
@@ -215,7 +216,7 @@ struct game
         }
         time = 600 * 2;
         //lives = 1;
-        lives = 100 - mapi(difficulty * difficulty / (99 * 99), 1, 99);
+        lives = 100 - mapi(difficulty / 20.0, 1, 99);
     }
     void render_char(char buf[], const char src[], int ln){
         for(int i = 0; i < 13; i++){
@@ -282,11 +283,19 @@ struct game
     }
     void win()
     {
-        endGame(false);
-        lcd.clear();
-        lcd.home();
-        lcd.printstr("You Won!");
-        fs_scrolling_text("Going to the next level!", 1, 2500);
+        if(curDifficulty == 20){
+            is_active = false;
+            lcd.clear();
+            lcd.home();
+            lcd.printstr("You won!");
+            fs_scrolling_text("You have completed all of the levels! Restart to reset", 1, 5000);
+        }else{
+            endGame(true);
+            lcd.clear();
+            lcd.home();
+            lcd.printstr("Good job!");
+            fs_scrolling_text("Going to the next level!", 1, 2500);
+        }
     }
     void lose(String reason)
     {
@@ -349,7 +358,6 @@ void screenRefresh();
 void beginGame(int delay = 6000);
 Task inputTask(15 * TASK_MILLISECOND, TASK_FOREVER, &inputScan, &sc, true), refreshTask(15 * TASK_MILLISECOND, TASK_FOREVER, &screenRefresh, &sc, true);
 Task gameTask(1000 * TASK_MILLISECOND, TASK_ONCE, NULL, &sc, false);
-int curDifficulty = 1;
 void endGame(bool hasWon)
 {
     gameTask.disable();
@@ -411,13 +419,14 @@ void prepGame()
     g.init(curDifficulty);
     g.render_pre();
     gameTask.setCallback(startGame);
-    gameTask.restartDelayed(3000 * TASK_MILLISECOND);
+    gameTask.restartDelayed((5000 - mapi(curDifficulty / 20.0, 0, 4000)) * TASK_MILLISECOND);
 }
 void gameLoader()
 {
     lcd.clear();
     lcd.printstr("Difficulty: ");
     lcd.print(curDifficulty);
+    fs_scrolling_text("Remember these letters!", 1, 2500);
     gameTask.setCallback(prepGame);
     gameTask.restartDelayed(3000 * TASK_MILLISECOND);
 }
