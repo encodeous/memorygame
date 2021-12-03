@@ -25,10 +25,8 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
-#include <algorithm>
 #include <TaskScheduler.h>
-#include <string>
-#include <functional>
+
 using namespace std;
 #pragma endregion
 #pragma region CONSTANTS
@@ -36,7 +34,7 @@ using namespace std;
 #define __b __a __a __a __a
 const char EMPTY_LINE[] = {__b __b __b __b};
 Scheduler sc;
-LiquidCrystal_I2C lcd(0x27,16,2);
+LiquidCrystal_I2C lcd(0x3F, 16, 2);
 #define IPT_POT A0
 #define IPT_BUT 4
 #define BUZZER 5
@@ -51,8 +49,7 @@ byte CHECK_MARK[] = {
         B11100,
         B01000,
         B00000,
-        B00000
-};
+        B00000};
 byte HEART[] = {
         B00000,
         B00000,
@@ -61,62 +58,87 @@ byte HEART[] = {
         B11111,
         B01110,
         B00100,
-        B00000
-};
+        B00000};
 
 #pragma endregion
 #pragma region UTILITIES
-li mapi(double pct, li min, li max){
+template <typename T>
+void swap (T *a, T *b)
+{
+    T temp = *a;
+    *a = *b;
+    *b = temp;
+}
+template <typename T>
+void randomize (T begin[], T end[])
+{
+    for(T* i = end - 1; i > begin; i--){
+        long j = random(0, end - begin);
+        swap(i, &begin[j]);
+    }
+}
+li mapi(double pct, li min, li max)
+{
     return (max - min) * pct + min;
 }
-double read_pct(){
+double read_pct()
+{
     return analogRead(IPT_POT) / 1023.0;
 }
 #pragma endregion
 // simple scheduled scrolling text
 int ts_ln = 0, ts_cur = 0, ts_wtsl, ts_cc = 0;
-string curstr;
-Task textScroller;
-void ts_callback(){
-    if(ts_cc-- != 0){
+String curstr;
+Task textScroller(0, TASK_ONCE, NULL, &sc, false);
+void ts_callback() {
+    Serial.println("EXEC: ts_callback");
+    if (ts_cc-- != 0) {
         lcd.setCursor(0, ts_ln);
         char buf[16];
-        for(int i = 0; i < 16; i++){
+        for (int i = 0; i < 16; i++) {
             buf[i] = curstr[i + ts_cur];
         }
+        Serial.println(buf);
         lcd.print(buf);
         ts_cur++;
-        textScroller.delay(ts_wtsl);
-        textScroller.setCallback(ts_callback);
-        sc.addTask(textScroller);
+        textScroller.restartDelayed(ts_wtsl * TASK_MILLISECOND);
     }
 }
-void fs_scrolling_text(const string& str, int ln, int duration){
-    if(str.length() <= 16){
+void fs_scrolling_text(const String &str, int ln, int duration)
+{
+    if (str.length() <= 16)
+    {
         lcd.setCursor(0, ln);
         char buf[16];
         memcpy(buf, EMPTY_LINE, sizeof(buf));
         memcpy(buf, str.c_str(), str.length() * sizeof(char));
         lcd.printstr(buf);
-    }else{
+    }
+    else
+    {
         double mspc = duration / (str.length() - 15.0);
+        Serial.println(mspc);
+        Serial.println(str.c_str());
         lcd.setCursor(0, ln);
+        curstr = str;
         char buf[16];
-        for(int i = 0; i < 16; i++){
+        for (int i = 0; i < 16; i++)
+        {
             buf[i] = curstr[i];
         }
-        lcd.print(buf);
+        lcd.printstr(buf);
         ts_cur = 1;
         ts_ln = ln;
         ts_cc = str.length() - 16;
         ts_wtsl = mspc;
-        textScroller.delay(ts_wtsl);
+        Serial.println(ts_wtsl);
         textScroller.setCallback(ts_callback);
-        sc.addTask(textScroller);
+        textScroller.enableDelayed(ts_wtsl * TASK_MILLISECOND);
     }
 }
 void endGame();
-struct game{
+struct game
+{
     char grid[26];
     bool picked[26];
     int cur = 0;
@@ -125,120 +147,172 @@ struct game{
     int lives = 0;
     bool is_active = false;
     bool odd_timer = false;
-    game(){}
-    void init(int difficulty){
+    game() {}
+    void init(int difficulty)
+    {
         is_active = true;
         char c3[3][13];
-        for(int i = 0; i < 13; i++){
+        for (int i = 0; i < 13; i++)
+        {
             c3[0][i] = 'A' + i;
             c3[1][i] = i;
             c3[2][i] = i + 13;
         }
-        random_shuffle(c3[0], c3[0] + 13);
-        random_shuffle(c3[1], c3[1] + 13);
-        random_shuffle(c3[2], c3[2] + 13);
-        for(int i = 0; i < 13; i++){
+        randomize(c3[0], c3[0] + 13);
+        randomize(c3[1], c3[1] + 13);
+        randomize(c3[2], c3[2] + 13);
+        for (int i = 0; i < 13; i++)
+        {
             grid[c3[1][i]] = c3[0][i];
             grid[c3[2][i]] = c3[0][i];
         }
         time = 240 * 2;
         lives = 21 - mapi(difficulty * difficulty / (20 * 20), 1, 20);
     }
-    void render(){
-
+    void render_char(char buf[], const char src[]){
+        Serial.print(src);
+        for(int i = 0; i < 13; i++){
+            buf[i + 3] = src[i];
+            buf[i + 19] = src[i + 13];
+        }
     }
-    void render_pre(){
+    void render()
+    {
+        char buf[32];
+        buf[0] = 0;
 
+        buf[1] = 'A';
+        buf[2] = 'Y';
+
+        buf[16] = 'O';
+        buf[17] = 'U';
+        buf[18] = 'T';
+        render_char(buf, grid);
+        lcd.home();
+        lcd.printstr(buf);
     }
-    void win(){
-
+    void render_pre()
+    {
+        char buf[32];
+        buf[0] = 'L';
+        buf[1] = 'A';
+        buf[2] = 'Y';
+        buf[16] = 'O';
+        buf[17] = 'U';
+        buf[18] = 'T';
+        render_char(buf, grid);
+        lcd.home();
+        lcd.printstr(buf);
     }
-    void lose(string reason){
-
+    void win()
+    {
     }
-    void on_click(){
-
+    void lose(String reason)
+    {
+    }
+    void on_click()
+    {
     }
 };
 game g;
 void inputScan();
 void screenRefresh();
-void beginGame(int delay = 5000);
-Task inputTask(5, TASK_FOREVER, &inputScan), refreshTask(15, TASK_FOREVER, &screenRefresh);
-Task gameTask;
+void beginGame(int delay = 6000);
+Task inputTask(100 * TASK_MILLISECOND, TASK_FOREVER, &inputScan, &sc, true), refreshTask(100 * TASK_MILLISECOND, TASK_FOREVER, &screenRefresh, &sc, true);
+Task gameTask(1000 * TASK_MILLISECOND, TASK_ONCE, NULL, &sc, false);
 int curDifficulty = 1;
-void endGame(bool hasWon){
+void endGame(bool hasWon)
+{
     gameTask.disable();
-    if(hasWon) curDifficulty++;
+    gameTask.setInterval(TASK_ONCE);
+    if (hasWon)
+        curDifficulty++;
     beginGame(3000);
     g.is_active = false;
 }
 int lastInp = 0;
 bool isDown = false;
-void inputScan(){
-    if(!g.is_active) return;
+void inputScan()
+{
+    if (!g.is_active)
+        return;
     g.cur = mapi(read_pct(), 0, 26 - 1);
-    if(millis() - lastInp >= 20){
+    if (millis() - lastInp >= 20)
+    {
         // ready for input
         lastInp = millis();
-        if(digitalRead(IPT_BUT) && !isDown){
+        if (digitalRead(IPT_BUT) && !isDown)
+        {
             isDown = true;
             g.on_click();
-        }else{
+        }
+        else
+        {
             isDown = false;
         }
     }
 }
-void screenRefresh(){
-    if(!g.is_active) return;
-
+void screenRefresh()
+{
+    if (!g.is_active)
+        return;
+    g.render();
 }
-void timer(){
+void timer()
+{
     g.odd_timer = !g.odd_timer;
     g.time--;
-    if(g.time <= 0){
+    if (g.time <= 0)
+    {
         g.lose("Out of time!");
     }
 }
 #pragma region GAME LOADING
-void startGame(){
-    sc.addTask(gameTask);
+void startGame()
+{
+    lcd.clear();
     gameTask.setIterations(TASK_FOREVER);
-    gameTask.setInterval(500);
+    gameTask.setInterval(500 * TASK_MILLISECOND);
     gameTask.setCallback(timer);
+    gameTask.restart();
 }
-void prepGame(){
+void prepGame()
+{
     g.init(curDifficulty);
     g.render_pre();
-    gameTask.delay(3000);
     gameTask.setCallback(startGame);
-    sc.addTask(gameTask);
+    gameTask.restartDelayed(3000 * TASK_MILLISECOND);
 }
-void gameLoader(){
+void gameLoader()
+{
     lcd.clear();
     lcd.printstr("Difficulty: ");
-    lcd.println(curDifficulty);
-    lcd.print("Remember These");
-    gameTask.delay(2000);
+    lcd.print(curDifficulty);
     gameTask.setCallback(prepGame);
+    gameTask.restartDelayed(3000 * TASK_MILLISECOND);
 }
-void beginGame(int delay){
-    gameTask.delay(delay);
+void beginGame(int delay)
+{
     gameTask.setCallback(gameLoader);
-    sc.addTask(gameTask);
+    gameTask.enableDelayed(delay);
 }
 #pragma endregion
-void setup()
-{
-    sc.addTask(inputTask);
-    sc.addTask(refreshTask);
+void setup() {
+    Serial.begin(9600);
+    inputTask.enable();
+    refreshTask.enable();
     lcd.init();
     lcd.backlight();
+    lcd.createChar(0, HEART);
+    lcd.createChar(1, CHECK_MARK);
     pinMode(BUZZER, OUTPUT);
     randomSeed(analogRead(A1));
     srand(analogRead(A1));
-    lcd.printstr("Robo Match v1.0");
+    lcd.home();
+    lcd.printstr("Robo Match v1.1");
     fs_scrolling_text("Memory Game Developed by Adam Chen - git.io/robomatch", 1, 5000);
     beginGame();
 }
-void loop(){ sc.execute(); }
+void loop() {
+    sc.execute();
+}
