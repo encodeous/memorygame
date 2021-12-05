@@ -13,28 +13,15 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7367ebde-b4b2-42cf-81cb-76ed16404984" name="Changes" comment="Removed/disabled debugging code">
+    <list default="true" id="7367ebde-b4b2-42cf-81cb-76ed16404984" name="Changes" comment="Relocate code &amp; add live demo">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/extensions.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/.idea/deployment.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/.idea/discord.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/.idea/robomatch.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/.vscode/extensions.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/CMakeListsPrivate.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/cmake-build-debug/robomatch.cbp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/cmake-build-uno/robomatch.cbp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/include/README" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/lib/README" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/platformio.ini" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/src/main.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robomatch/test/README" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/README" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/README" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/README" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,11 +58,6 @@
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RunManager" selected="PlatformIO.PlatformIO Upload">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Z_DUMMY_TARGET" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="robomatch" TARGET_NAME="Z_DUMMY_TARGET" CONFIG_NAME="uno" RUN_TARGET_PROJECT_NAME="robomatch" RUN_TARGET_NAME="Z_DUMMY_TARGET">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -112,7 +94,9 @@
       <workItem from="1638454733217" duration="6588000" />
       <workItem from="1638467759126" duration="2635000" />
       <workItem from="1638491243887" duration="9850000" />
-      <workItem from="1638505410104" duration="104000" />
+      <workItem from="1638505410104" duration="5953000" />
+      <workItem from="1638552315756" duration="616000" />
+      <workItem from="1638563082051" duration="3718000" />
     </task>
     <task id="LOCAL-00001" summary="Remove ArduinoSTL">
       <created>1638492072800</created>
@@ -135,7 +119,14 @@
       <option name="project" value="LOCAL" />
       <updated>1638503690822</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Relocate code &amp; add live demo">
+      <created>1638505533795</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1638505533795</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -161,6 +152,7 @@
     <MESSAGE value="Remove ArduinoSTL" />
     <MESSAGE value="Robo Match v1.6 - Working Version" />
     <MESSAGE value="Removed/disabled debugging code" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed/disabled debugging code" />
+    <MESSAGE value="Relocate code &amp; add live demo" />
+    <option name="LAST_COMMIT_MESSAGE" value="Relocate code &amp; add live demo" />
   </component>
 </project>

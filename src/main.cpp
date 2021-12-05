@@ -35,7 +35,7 @@ using namespace std;
 const char EMPTY_LINE[] = {__b __b __b __b};
 Scheduler sc;
 LiquidCrystal_I2C lcd(0x3F, 16, 2);
-#define IPT_POT A0
+#define IPT_POT A3
 #define IPT_BUT 4
 #define BUZZER 5
 #define li long int
@@ -117,9 +117,17 @@ li mapi(double pct, li min, li max)
 {
     return (max - min) * pct + min;
 }
+// tuned specifically for my potentiometer
+int map2(int val){
+    if(val <= 50){
+        return mapi(val / 50.0, 0, 10);
+    }else{
+        return mapi((val - 50.0) / (1023.0 - 50), 11, 1023);
+    }
+}
 double read_pct()
 {
-    return analogRead(IPT_POT) / 1023.0;
+    return map2(analogRead(IPT_POT)) / 1023.0;
 }
 #pragma endregion
 int curDifficulty = 1;
@@ -176,6 +184,13 @@ void fs_scrolling_text(const String &str, int ln, int duration)
         textScroller.restartDelayed(100 + ts_wtsl * TASK_MILLISECOND);
     }
 }
+void play_sound(bool success){
+    if(success){
+        tone(BUZZER, 200, 100);
+    }else{
+        tone(BUZZER, 50, 1000);
+    }
+}
 void endGame(bool hasWon);
 struct game
 {
@@ -213,6 +228,11 @@ struct game
         {
             grid[c3[1][i]] = c3[0][i];
             grid[c3[2][i]] = c3[0][i];
+        }
+        for(int i =0 ; i < 13; i++){
+            if(random() % 2 == 0){
+                swap(&grid[i], &grid[i + 13]);
+            }
         }
         time = 600 * 2;
         //lives = 1;
@@ -274,7 +294,6 @@ struct game
         render_char(buf1, grid, 0);
         render_char(buf2, grid, 1);
         lcd.clear();
-        lcd.home();
         lcd.print(buf1);
         Serial.println(buf1);
         lcd.setCursor(0, 1);
@@ -286,13 +305,11 @@ struct game
         if(curDifficulty == 20){
             is_active = false;
             lcd.clear();
-            lcd.home();
             lcd.printstr("You won!");
             fs_scrolling_text("You have completed all of the levels! Restart to reset", 1, 5000);
         }else{
             endGame(true);
             lcd.clear();
-            lcd.home();
             lcd.printstr("Good job!");
             fs_scrolling_text("Going to the next level!", 1, 2500);
         }
@@ -301,7 +318,6 @@ struct game
     {
         endGame(false);
         lcd.clear();
-        lcd.home();
         lcd.printstr(reason.c_str());
         fs_scrolling_text("Restarting the level...", 1, 2500);
     }
@@ -316,22 +332,27 @@ struct game
                 clearSelT = 6;
                 lives--;
                 pcsel = cur;
+                play_sound(false);
             }else{
                 remChar -= 2;
                 csel = -1;
                 pcsel = -1;
+                play_sound(true);
             }
         }else{
             csel = cur;
             picked[csel] = true;
+            play_sound(true);
         }
         check_game();
     }
     void check_game(){
         if(lives <= 0){
+            play_sound(false);
             lose("Out of lives!");
         }
         if(remChar <= 0){
+            play_sound(true);
             win();
         }
     }
@@ -356,7 +377,7 @@ game g;
 void inputScan();
 void screenRefresh();
 void beginGame(int delay = 6000);
-Task inputTask(15 * TASK_MILLISECOND, TASK_FOREVER, &inputScan, &sc, true), refreshTask(15 * TASK_MILLISECOND, TASK_FOREVER, &screenRefresh, &sc, true);
+Task inputTask(15 * TASK_MILLISECOND, TASK_FOREVER, &inputScan, &sc, true), refreshTask(2 * TASK_MILLISECOND, TASK_FOREVER, &screenRefresh, &sc, true);
 Task gameTask(1000 * TASK_MILLISECOND, TASK_ONCE, NULL, &sc, false);
 void endGame(bool hasWon)
 {
@@ -369,6 +390,7 @@ void endGame(bool hasWon)
 }
 int lastInp = 0;
 bool isDown = false;
+int lastInpVal = 0;
 void inputScan()
 {
     if (!g.is_active)
@@ -432,6 +454,7 @@ void gameLoader()
 }
 void beginGame(int delay)
 {
+    play_sound(true);
     gameTask.setCallback(gameLoader);
     gameTask.enableDelayed(delay);
 }
@@ -449,13 +472,14 @@ void setup() {
     lcd.createChar(SELECTION_BOX, __cc04);
     lcd.createChar(SELECTION_BOX2, __cc05);
     pinMode(BUZZER, OUTPUT);
-    randomSeed(analogRead(A1));
-    srand(analogRead(A1));
+    pinMode(IPT_BUT, INPUT);
+    randomSeed(analogRead(A2));
+    srand(analogRead(A2));
 #ifdef DEBUGGING
     prepGame();
 #else
     lcd.home();
-    lcd.printstr("Robo Match v1.6");
+    lcd.printstr("Robo Match v2.0");
     fs_scrolling_text("Memory Game Developed by Adam Chen - git.io/robomatch", 1, 4000);
     beginGame();
 #endif
