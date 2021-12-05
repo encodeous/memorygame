@@ -3,7 +3,7 @@ A Memory Game built on the Arduino Platform. *Project made for TEJ4M*
 
 See a live demo of RoboMatch on YouTube! (Click to see video)
 
-[![Demo of RoboMatch](https://j.gifs.com/z6xooO.gif)](https://www.youtube.com/watch?v=cjLqTAt5Vvc)
+[![Demo of RoboMatch](https://user-images.githubusercontent.com/47889571/144732060-391cb0a3-d17b-4996-81e2-7f85a5beb02e.png)](https://www.youtube.com/watch?v=cjLqTAt5Vvc)
 
 Alternatively, you can play around with the code online at https://wokwi.com/arduino/projects/316891890985206336
 
